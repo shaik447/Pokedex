@@ -7,16 +7,52 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     
     @IBOutlet weak var collectionView:UICollectionView!
+    @IBOutlet weak var musicBtn:UIButton!
+    
+    var musicPlayer:AVAudioPlayer! = nil
 
+    var pokemons=[Pokemon]()
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.dataSource=self
         collectionView.delegate=self
+        ParseCSV()
+        initAudio()
+    }
+    
+    func initAudio(){
+        let path=Bundle.main.path(forResource: "music", ofType: "mp3")
+        do {
+            musicPlayer=try AVAudioPlayer(contentsOf: URL(string: path!)!)
+            musicPlayer.prepareToPlay()
+            musicPlayer.numberOfLoops = -1
+            musicPlayer.play()
+        } catch let err as NSError {
+            print(err.debugDescription)
+        }
         
+        
+    }
+    
+    func ParseCSV(){
+        let path=Bundle.main.path(forResource: "pokemon", ofType: "csv")
+        do {
+            let csv=try CSV(contentsOfURL: path!)
+            let rows=csv.rows
+            for row in rows{
+                let pokeid=row["id"]
+                let pokename=row["identifier"]
+                let poke=Pokemon(name: pokename!, pokemonId: Int(pokeid!)!)
+                pokemons.append(poke)
+            }
+        } catch let err as NSError {
+            print(err.debugDescription)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -26,7 +62,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell=collectionView.dequeueReusableCell(withReuseIdentifier: "PokeCell", for: indexPath) as? PokeCell{
-            let pokemon=Pokemon(name: "Pokemon", pokemonId: indexPath.row+1)
+            let pokemon=pokemons[indexPath.row]
             cell.UpdateUI(pokemon: pokemon)
             return cell
         }
@@ -34,7 +70,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 30
+        return pokemons.count
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -47,6 +83,18 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 104, height: 104)
+    }
+    
+    
+    @IBAction func musicBtnPressed(_ sender: UIButton) {
+        if musicPlayer.isPlaying{
+            musicPlayer.pause()
+            sender.alpha=0.2
+        }else{
+            musicPlayer.play()
+            sender.alpha=1.0
+        }
+        
     }
     
     
