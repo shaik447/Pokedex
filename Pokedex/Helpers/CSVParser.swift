@@ -8,66 +8,73 @@
 
 import Foundation
 
-extension String {
-    func csvRows() -> [[String]] {
-        var rows : [[String]] = []
-        
-        let newlineCharacterSet = CharacterSet.newlines
-        let importantCharactersSet = CharacterSet(charactersIn: ",\"").union(newlineCharacterSet)
-        
-        let scanner = Scanner(string: self)
-        scanner.charactersToBeSkipped = nil
-        
-        while !scanner.isAtEnd {
-            var insideQuotes = false
-            var finishedRow = false
-            var columns : [String] = []
-            var currentColumn = ""
-            while !finishedRow {
-                var tempString : NSString? = nil
-                if scanner.scanUpToCharacters(from: importantCharactersSet, into: &tempString) {
-                    currentColumn.append(tempString! as String)
-                }
-                
-                if scanner.isAtEnd {
-                    if currentColumn != "" {
-                        columns.append(currentColumn)
-                    }
-                    finishedRow = true
-                } else if scanner.scanCharacters(from: newlineCharacterSet, into: &tempString) {
-                    if insideQuotes {
-                        // Add line break to column text
-                        currentColumn.append(tempString! as String)
-                    } else {
-                        // End of row
-                        if currentColumn != "" {
-                            columns.append(currentColumn)
-                        }
-                        finishedRow = true
-                    }
-                } else if scanner.scanString("\"", into: nil) {
-                    if insideQuotes && scanner.scanString("\"", into: nil) {
-                        // Replace double quotes with a single quote in the column string.
-                        currentColumn.append("\"")
-                    } else {
-                        // Start or end of a quoted string.
-                        insideQuotes = !insideQuotes
-                    }
-                } else if scanner.scanString(",", into: nil) {
-                    if insideQuotes {
-                        currentColumn.append(",")
-                    } else {
-                        // This is a column separating comma
-                        columns.append(currentColumn)
-                        currentColumn = ""
-                        scanner.scanCharacters(from: CharacterSet.whitespaces, into: nil)
-                    }
-                }
-            }
-            if columns.count > 0 {
-                rows.append(columns)
-            }
+open class CSV {
+    open var headers: [String] = []
+    open var rows: [Dictionary<String, String>] = []
+    open var columns = Dictionary<String, [String]>()
+    var delimiter = CharacterSet(charactersIn: ",")
+    
+    public init(content: String?, delimiter: CharacterSet, encoding: UInt) throws{
+        if let csvStringToParse = content{
+            self.delimiter = delimiter
+            
+            let newline = CharacterSet.newlines
+            var lines: [String] = []
+            csvStringToParse.trimmingCharacters(in: newline).enumerateLines { line, stop in lines.append(line) }
+            
+            self.headers = self.parseHeaders(fromLines: lines)
+            self.rows = self.parseRows(fromLines: lines)
+            self.columns = self.parseColumns(fromLines: lines)
         }
+    }
+    
+    public convenience init(contentsOfURL url: String) throws {
+        let comma = CharacterSet(charactersIn: ",")
+        let csvString: String?
+        do {
+            csvString = try String(contentsOfFile: url, encoding: String.Encoding.utf8)
+        } catch _ {
+            csvString = nil
+        };
+        try self.init(content: csvString,delimiter:comma, encoding:String.Encoding.utf8.rawValue)
+    }
+    
+    
+    func parseHeaders(fromLines lines: [String]) -> [String] {
+        return lines[0].components(separatedBy: self.delimiter)
+    }
+    
+    func parseRows(fromLines lines: [String]) -> [Dictionary<String, String>] {
+        var rows: [Dictionary<String, String>] = []
+        
+        for (lineNumber, line) in lines.enumerated() {
+            if lineNumber == 0 {
+                continue
+            }
+            
+            var row = Dictionary<String, String>()
+            let values = line.components(separatedBy: self.delimiter)
+            for (index, header) in self.headers.enumerated() {
+                if index < values.count {
+                    row[header] = values[index]
+                } else {
+                    row[header] = ""
+                }
+            }
+            rows.append(row)
+        }
+        
         return rows
+    }
+    
+    func parseColumns(fromLines lines: [String]) -> Dictionary<String, [String]> {
+        var columns = Dictionary<String, [String]>()
+        
+        for header in self.headers {
+            let column = self.rows.map { row in row[header] != nil ? row[header]! : "" }
+            columns[header] = column
+        }
+        
+        return columns
     }
 }
