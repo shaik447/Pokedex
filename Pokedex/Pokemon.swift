@@ -22,6 +22,6 @@ class Pokemon{
     
     init(name:String, pokemonId:Int) {
         self._name=name
-        self._pokemonId=pokemonId        
+        self._pokemonId=pokemonId
     }
 }
