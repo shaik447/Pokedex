@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -142,11 +142,60 @@
                         <outlet property="collectionView" destination="ZMV-Q2-0cz" id="6bc-5u-M5k"/>
                         <outlet property="musicBtn" destination="dXh-fS-2lG" id="LJl-Oo-uta"/>
                         <outlet property="searchbar" destination="Oa3-ER-xKs" id="8M5-d4-WJE"/>
+                        <segue destination="Eao-VZ-Dd1" kind="show" identifier="PokeSegue" id="0XZ-hc-oQQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="144.375" y="125.70422535211267"/>
+        </scene>
+        <!--Poke DetailVC-->
+        <scene sceneID="4dD-IV-2hk">
+            <objects>
+                <viewController id="Eao-VZ-Dd1" customClass="PokeDetailVC" customModule="Pokedex" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="hyq-9F-SmM"/>
+                        <viewControllerLayoutGuide type="bottom" id="X2P-fS-Ane"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="7y4-I6-cpA">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qtb-sF-Mz6">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="65"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5dY-bN-3oY">
+                                        <rect key="frame" x="110" y="33" width="100" height="24"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="bpd-zx-IuG"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="PokemonSolidNormal" family="Pokemon Solid" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.99746192889999996" green="0.29303168750000003" blue="0.45329448820000001" alpha="0.88698630140000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="5dY-bN-3oY" firstAttribute="centerX" secondItem="Qtb-sF-Mz6" secondAttribute="centerX" id="EuJ-aj-X5a"/>
+                                    <constraint firstAttribute="bottom" secondItem="5dY-bN-3oY" secondAttribute="bottom" constant="8" id="R8d-cN-7Fd"/>
+                                    <constraint firstAttribute="height" constant="65" id="h5W-ZY-RC3"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Qtb-sF-Mz6" firstAttribute="leading" secondItem="7y4-I6-cpA" secondAttribute="leading" id="FC1-k0-LcR"/>
+                            <constraint firstItem="Qtb-sF-Mz6" firstAttribute="top" secondItem="7y4-I6-cpA" secondAttribute="top" id="R4f-b5-y36"/>
+                            <constraint firstAttribute="trailing" secondItem="Qtb-sF-Mz6" secondAttribute="trailing" id="mpT-6Y-UmR"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="pokeLabl" destination="5dY-bN-3oY" id="j1G-pA-BJZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="L2s-Rf-SFT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="919" y="126"/>
         </scene>
     </scenes>
     <resources>

@@ -36,6 +36,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     
     func hideKeyboard() {
         view.endEditing(true)
+        //isSearching=false
     }
     
     func initAudio(){
@@ -101,8 +102,23 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        var pokemon:Pokemon
+        if isSearching{
+            pokemon=filteredPokemons[indexPath.row]
+        }else{
+            pokemon=pokemons[indexPath.row]
+        }
+        performSegue(withIdentifier: "PokeSegue", sender: pokemon)
+
+        
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?){
+        if let destVc=segue.destination as? PokeDetailVC, let poke=sender as? Pokemon{
+            destVc.pokemon=poke
+        }
+    
+    }
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
