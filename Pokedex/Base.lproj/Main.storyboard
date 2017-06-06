@@ -190,6 +190,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="headerView" destination="Qtb-sF-Mz6" id="8Ct-oT-m7y"/>
                         <outlet property="pokeLabl" destination="5dY-bN-3oY" id="j1G-pA-BJZ"/>
                     </connections>
                 </viewController>
